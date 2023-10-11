@@ -14,11 +14,10 @@ pd.set_option('display.max_columns', None)
 # print(flights.head(10))
 
 # print(airports["TotalSeats"].sort_values(ascending=True).index)
-airports["MedianArrDelay"] = flights.groupby('Origin')['ArrDelay'].mean()
-# airports = airports.dropna(subset=["MedianArrDelay"])
-airports["MedianArrDelay"].fillna(0, inplace=True)
-sorted_airports = airports.sort_values(by="TotalSeats", ascending=False)
-sorted_airports = sorted_airports.head(10)
+airports["MedianArrDelay"] = flights.groupby('Origin')['ArrDelay'].median()
+airports.dropna(subset=['MedianArrDelay'], inplace=True)
+sorted_airports = airports.sort_values(by='TotalSeats', ascending=False)
+sorted_airports = sorted_airports.tail(100)
 
 print(sorted_airports)
 
@@ -31,7 +30,7 @@ sns.catplot(x="MedianArrDelay",
             aspect=1,
             palette='coolwarm_r')
 
-
+plt.text(sorted_airports.loc["SPI", "MedianArrDelay"], sorted_airports.index.get_loc("SPI"), "Test")
 plt.yticks(rotation=45)
 plt.yticks(fontsize=10)
 plt.show()
