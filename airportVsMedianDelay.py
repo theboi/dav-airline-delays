@@ -8,18 +8,10 @@ flights = pd.read_csv("./data/flights.csv")
 airports = pd.read_csv("./data/airports.csv", index_col="Orig")
 
 pd.set_option('display.max_columns', None)
-# print(flights.shape)
-# print(flights.loc[:, "ArrDelay"].describe(include="all"))
-
-# print(flights.head(10))
-
-# print(airports["TotalSeats"].sort_values(ascending=True).index)
 airports["MedianArrDelay"] = flights.groupby('Origin')['ArrDelay'].median()
 airports.dropna(subset=['MedianArrDelay'], inplace=True)
 sorted_airports = airports.sort_values(by='TotalSeats', ascending=False)
-sorted_airports = sorted_airports.tail(100)
-
-print(sorted_airports)
+# sorted_airports = sorted_airports.head(30)
 
 sns.catplot(x="MedianArrDelay",
             y="Orig",
@@ -30,7 +22,12 @@ sns.catplot(x="MedianArrDelay",
             aspect=1,
             palette='coolwarm_r')
 
-plt.text(sorted_airports.loc["SPI", "MedianArrDelay"], sorted_airports.index.get_loc("SPI"), "Test")
+for code in ["SPI", "CMX", "JFK", "ATL"]:
+    plt.text(sorted_airports.loc[code, "MedianArrDelay"], sorted_airports.index.get_loc(code), code)
+
+# for index, row in sorted_airports.iterrows():
+#     plt.text(row["MedianArrDelay"], row["TotalSeats"], index, fontsize=8, color='black')
+
 plt.yticks(rotation=45)
 plt.yticks(fontsize=10)
 plt.show()
